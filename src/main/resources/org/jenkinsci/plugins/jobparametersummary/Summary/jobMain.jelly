@@ -23,15 +23,19 @@ THE SOFTWARE.
 -->
 
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-	<h2>Build Parameters</h2>
-	<dl>
-	    <j:forEach var="parameter" items="${it.parameters}">
-		    <dt>${parameter.descriptor.displayName}	<tt>${parameter.name}</tt>
-		        <j:if test="${parameter.defaultParameterValue != null}">
-		        	= ${parameter.defaultParameterValue.defaultValue}
-		        </j:if>
-		    </dt>
-		    <dd>${parameter.description}</dd>
-	    </j:forEach>
-	</dl>
+    <h2>Build Parameters</h2>
+    <table style="margin-left: 1em;">
+        <j:forEach var="parameter" items="${it.parameters}">
+        <tr>
+            <td>${parameter.descriptor.displayName}</td>
+            <td><tt><strong>${parameter.name}</strong></tt></td>
+            <td>
+                <j:if test="${it.getDefault(parameter) != null}">
+                    <st:nbsp/>=<st:nbsp/>${it.getDefault(parameter)}
+                </j:if>
+            </td>
+            <td colspan="2"><small>${parameter.description}</small></td>
+        </tr>
+        </j:forEach>
+    </table>
 </j:jelly>

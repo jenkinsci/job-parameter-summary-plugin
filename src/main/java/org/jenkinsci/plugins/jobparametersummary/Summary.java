@@ -4,10 +4,15 @@ import hudson.Extension;
 import hudson.matrix.MatrixConfiguration;
 import hudson.model.Action;
 import hudson.model.InvisibleAction;
+import hudson.model.ParameterValue;
 import hudson.model.TransientProjectActionFactory;
 import hudson.model.AbstractProject;
+import hudson.model.BooleanParameterDefinition;
+import hudson.model.BooleanParameterValue;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParametersDefinitionProperty;
+import hudson.model.StringParameterDefinition;
+import hudson.model.StringParameterValue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,17 +30,33 @@ public class Summary extends InvisibleAction {
 
 	public List<ParameterDefinition> getParameters() {
 
-	    final ParametersDefinitionProperty params = project.getProperty(
-	            ParametersDefinitionProperty.class
-	    );
-
-	    return params.getParameterDefinitions();
+	    return definitionProperty(project).getParameterDefinitions();
 	}
 
 	@Override
 	public String toString() {
 
 	    return "Job parameter summary for " + project.toString();
+	}
+
+	private static ParametersDefinitionProperty definitionProperty(
+	        final AbstractProject<?, ?> project
+	) {
+
+	    return project.getProperty(ParametersDefinitionProperty.class);
+	}
+
+	/**
+	 * Get default value for {@link ParameterDefinition} that has any and it can be displayed
+	 */
+	public String getDefault(final ParameterDefinition d) {
+
+	    final ParameterValue v = d.getDefaultParameterValue();
+
+	    if (d instanceof StringParameterDefinition) return ((StringParameterValue) v).value;
+	    if (d instanceof BooleanParameterDefinition) return new Boolean(((BooleanParameterValue) v).value).toString();
+
+	    return null;
 	}
 
     @Extension
@@ -61,7 +82,7 @@ public class Summary extends InvisibleAction {
 
         private boolean isParameterized(final AbstractProject<?, ?> project) {
 
-            return project.getProperty(ParametersDefinitionProperty.class) == null;
+            return definitionProperty(project) == null;
         }
     }
 }
