@@ -9,6 +9,7 @@
   <artifactId>job-parameter-summary</artifactId>
   <version>0.2-SNAPSHOT</version>
   <packaging>hpi</packaging>
+  <name>Job Parameter Summary Plugin</name>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Job+Parameter+Summary+Plugin</url>
 
   <developers>
@@ -23,4 +24,9 @@
     <developerConnection>scm:git:git@github.com:jenkinsci/job-parameter-summary-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/job-parameter-summary-plugin</url>
   </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <surefire.useFile>false</surefire.useFile>
+  </properties>
 </project>  
