@@ -53,8 +53,8 @@ public class Summary extends InvisibleAction {
 
 	    final ParameterValue v = d.getDefaultParameterValue();
 
-	    if (d instanceof StringParameterDefinition) return ((StringParameterValue) v).value;
 	    if (d instanceof BooleanParameterDefinition) return new Boolean(((BooleanParameterValue) v).value).toString();
+	    if (d instanceof StringParameterDefinition) return "\"" + ((StringParameterValue) v).value + "\"";
 
 	    return null;
 	}
