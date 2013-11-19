@@ -75,14 +75,14 @@ public class Summary extends InvisibleAction {
                 target = ((MatrixConfiguration) target).getParent();
             }
 
-            if (isParameterized(target)) return Collections.emptyList();
+            if (!isParameterized(target)) return Collections.emptyList();
 
             return Arrays.asList(new Summary(target));
         }
 
         private boolean isParameterized(final AbstractProject<?, ?> project) {
 
-            return definitionProperty(project) == null;
+            return definitionProperty(project) != null;
         }
     }
 }
