@@ -11,6 +11,8 @@ import hudson.model.InvisibleAction;
 import hudson.model.ParameterDefinition;
 import hudson.model.ParameterValue;
 import hudson.model.ParametersDefinitionProperty;
+import hudson.model.PasswordParameterDefinition;
+import hudson.model.PasswordParameterValue;
 import hudson.model.StringParameterDefinition;
 import hudson.model.StringParameterValue;
 import hudson.model.TransientProjectActionFactory;
@@ -55,6 +57,7 @@ public class Summary extends InvisibleAction {
 
 	    if (d instanceof BooleanParameterDefinition) return new Boolean(((BooleanParameterValue) v).value).toString();
 	    if (d instanceof StringParameterDefinition) return "\"" + ((StringParameterValue) v).value + "\"";
+	    if (d instanceof PasswordParameterDefinition) return "\"" + ((PasswordParameterValue) v).getValue().getEncryptedValue() + "\"";
 	    if (d instanceof ChoiceParameterDefinition) return "\"" + ((StringParameterValue) v).value + "\"";
 
 	    return null;
