@@ -23,9 +23,9 @@
  */
 package org.jenkinsci.plugins.jobparametersummary;
 
-import static org.junit.Assert.assertEquals;
+import hudson.model.ChoiceParameterDefinition;
 import hudson.model.StringParameterDefinition;
-
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class SummaryTest {
@@ -35,5 +35,11 @@ public class SummaryTest {
 
         assertEquals("\"\"", new Summary(null).getDefault(new StringParameterDefinition("EMPTY", "")));
         assertEquals("\"foo\"", new Summary(null).getDefault(new StringParameterDefinition("FOO", "foo")));
+    }
+
+    @Test
+    public void checkChoiceDefaultValue() {
+        // first value is the default value
+        assertEquals("\"foo\"", new Summary(null).getDefault(new ChoiceParameterDefinition("FOO", "foo\nbar", "")));
     }
 }

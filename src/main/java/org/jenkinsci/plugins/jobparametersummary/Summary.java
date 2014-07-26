@@ -2,18 +2,18 @@ package org.jenkinsci.plugins.jobparametersummary;
 
 import hudson.Extension;
 import hudson.matrix.MatrixConfiguration;
-import hudson.model.Action;
-import hudson.model.InvisibleAction;
-import hudson.model.ParameterValue;
-import hudson.model.TransientProjectActionFactory;
 import hudson.model.AbstractProject;
+import hudson.model.Action;
 import hudson.model.BooleanParameterDefinition;
 import hudson.model.BooleanParameterValue;
+import hudson.model.ChoiceParameterDefinition;
+import hudson.model.InvisibleAction;
 import hudson.model.ParameterDefinition;
+import hudson.model.ParameterValue;
 import hudson.model.ParametersDefinitionProperty;
 import hudson.model.StringParameterDefinition;
 import hudson.model.StringParameterValue;
-
+import hudson.model.TransientProjectActionFactory;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -55,6 +55,7 @@ public class Summary extends InvisibleAction {
 
 	    if (d instanceof BooleanParameterDefinition) return new Boolean(((BooleanParameterValue) v).value).toString();
 	    if (d instanceof StringParameterDefinition) return "\"" + ((StringParameterValue) v).value + "\"";
+	    if (d instanceof ChoiceParameterDefinition) return "\"" + ((StringParameterValue) v).value + "\"";
 
 	    return null;
 	}
