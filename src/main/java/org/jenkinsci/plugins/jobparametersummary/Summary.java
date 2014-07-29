@@ -2,18 +2,21 @@ package org.jenkinsci.plugins.jobparametersummary;
 
 import hudson.Extension;
 import hudson.matrix.MatrixConfiguration;
-import hudson.model.Action;
-import hudson.model.InvisibleAction;
-import hudson.model.ParameterValue;
-import hudson.model.TransientProjectActionFactory;
 import hudson.model.AbstractProject;
+import hudson.model.Action;
 import hudson.model.BooleanParameterDefinition;
 import hudson.model.BooleanParameterValue;
+import hudson.model.ChoiceParameterDefinition;
+import hudson.model.InvisibleAction;
 import hudson.model.ParameterDefinition;
+import hudson.model.ParameterValue;
 import hudson.model.ParametersDefinitionProperty;
+import hudson.model.PasswordParameterDefinition;
+import hudson.model.PasswordParameterValue;
 import hudson.model.StringParameterDefinition;
 import hudson.model.StringParameterValue;
-
+import hudson.model.TransientProjectActionFactory;
+import hudson.util.Secret;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,43 +24,62 @@ import java.util.List;
 
 public class Summary extends InvisibleAction {
 
-	final private AbstractProject<?, ?> project;
+    private static final String PASSWORD_MASK = "********";
+    private static final String QUOTE_STRING = "\"";
 
-	public Summary(@SuppressWarnings("rawtypes") AbstractProject project) {
+    final private AbstractProject<?, ?> project;
 
-	    this.project = project;
-	}
+    public Summary(@SuppressWarnings("rawtypes") AbstractProject project) {
 
-	public List<ParameterDefinition> getParameters() {
+        this.project = project;
+    }
 
-	    return definitionProperty(project).getParameterDefinitions();
-	}
+    public List<ParameterDefinition> getParameters() {
 
-	@Override
-	public String toString() {
+        return definitionProperty(project).getParameterDefinitions();
+    }
 
-	    return "Job parameter summary for " + project.toString();
-	}
+    @Override
+    public String toString() {
 
-	private static ParametersDefinitionProperty definitionProperty(
-	        final AbstractProject<?, ?> project
-	) {
+        return "Job parameter summary for " + project.toString();
+    }
 
-	    return project.getProperty(ParametersDefinitionProperty.class);
-	}
+    private static ParametersDefinitionProperty definitionProperty(
+            final AbstractProject<?, ?> project
+    ) {
 
-	/**
-	 * Get default value for {@link ParameterDefinition} that has any and it can be displayed
-	 */
-	public String getDefault(final ParameterDefinition d) {
+        return project.getProperty(ParametersDefinitionProperty.class);
+    }
 
-	    final ParameterValue v = d.getDefaultParameterValue();
+    private static String quote(String s) {
+        return QUOTE_STRING + s + QUOTE_STRING;
+    }
 
-	    if (d instanceof BooleanParameterDefinition) return new Boolean(((BooleanParameterValue) v).value).toString();
-	    if (d instanceof StringParameterDefinition) return "\"" + ((StringParameterValue) v).value + "\"";
+    /**
+     * Get default value for {@link ParameterDefinition} that has any and it can be displayed
+     */
+    public String getDefault(final ParameterDefinition d) {
 
-	    return null;
-	}
+        final ParameterValue v = d.getDefaultParameterValue();
+
+        String res = null;
+        if (d instanceof BooleanParameterDefinition) {
+            res = new Boolean(((BooleanParameterValue) v).value).toString();
+        } else if (d instanceof StringParameterDefinition) {
+            res = quote(((StringParameterValue) v).value);
+        } else if (d instanceof PasswordParameterDefinition) {
+            // check whether we have a default value and return a printable mask if we do
+            String password = Secret.toString(((PasswordParameterValue) v).getValue());
+            if (!password.isEmpty()) {
+                res = quote(PASSWORD_MASK);
+            }
+        } else if (d instanceof ChoiceParameterDefinition) {
+            res = quote(((StringParameterValue) v).value);
+        }
+
+        return res;
+    }
 
     @Extension
     public static class SummaryFactory extends TransientProjectActionFactory {
@@ -75,7 +97,9 @@ public class Summary extends InvisibleAction {
                 target = ((MatrixConfiguration) target).getParent();
             }
 
-            if (!isParameterized(target)) return Collections.emptyList();
+            if (!isParameterized(target)) {
+                return Collections.emptyList();
+            }
 
             return Arrays.asList(new Summary(target));
         }
