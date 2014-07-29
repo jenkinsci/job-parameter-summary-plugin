@@ -7,7 +7,7 @@
   </parent>
 
   <artifactId>job-parameter-summary</artifactId>
-  <version>0.3-SNAPSHOT</version>
+  <version>0.3</version>
   <packaging>hpi</packaging>
   <name>Job Parameter Summary Plugin</name>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Job+Parameter+Summary+Plugin</url>
