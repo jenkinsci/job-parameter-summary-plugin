@@ -64,7 +64,7 @@ public class Summary extends InvisibleAction {
 
         String res = null;
         if (d instanceof BooleanParameterDefinition) {
-            res = new Boolean(((BooleanParameterValue) v).value).toString();
+            res = Boolean.toString(((BooleanParameterValue) v).value);
         } else if (d instanceof StringParameterDefinition) {
             res = quote(((StringParameterValue) v).value);
         } else if (d instanceof PasswordParameterDefinition) {
@@ -104,7 +104,7 @@ public class Summary extends InvisibleAction {
                 return Collections.emptyList();
             }
 
-            return Arrays.asList(new Summary(target));
+            return Collections.singletonList(new Summary(target));
         }
 
         private boolean isParameterized(final AbstractProject<?, ?> project) {
