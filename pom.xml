@@ -7,7 +7,7 @@
   </parent>
 
   <artifactId>job-parameter-summary</artifactId>
-  <version>0.5-SNAPSHOT</version>
+  <version>0.5</version>
   <packaging>hpi</packaging>
   <name>Job Parameter Summary Plugin</name>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Job+Parameter+Summary+Plugin</url>
@@ -24,7 +24,7 @@
     <connection>scm:git:git://github.com/jenkinsci/job-parameter-summary-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/job-parameter-summary-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/job-parameter-summary-plugin</url>
-    <tag>HEAD</tag>
+    <tag>job-parameter-summary-0.5</tag>
   </scm>
 
   <properties>
