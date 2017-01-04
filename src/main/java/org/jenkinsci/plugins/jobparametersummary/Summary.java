@@ -1,7 +1,6 @@
 package org.jenkinsci.plugins.jobparametersummary;
 
 import hudson.Extension;
-import hudson.matrix.MatrixConfiguration;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.BooleanParameterDefinition;
@@ -92,9 +91,13 @@ public class Summary extends InvisibleAction {
                 @SuppressWarnings("rawtypes") AbstractProject target
         ) {
 
-            if (target instanceof MatrixConfiguration) {
-
-                target = ((MatrixConfiguration) target).getParent();
+            try {
+                Class<?> mc = Class.forName("hudson.matrix.MatrixConfiguration");
+                if (mc.isInstance(target)) {
+                    target = (AbstractProject) target.getParent();
+                }
+            } catch (ClassNotFoundException e) {
+                // matrix-project not installed
             }
 
             if (!isParameterized(target)) {
